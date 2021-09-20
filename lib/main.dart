@@ -136,6 +136,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   bool stateOfLed = false;
+  bool onPressedFlag = false;
+  bool offPressedFlag = false;
   var ledStateString = "Off";
   final pubTopic = 'GsmCit/led';
   final builder = MqttClientPayloadBuilder();
@@ -146,9 +148,13 @@ class _MyHomePageState extends State<MyHomePage> {
       if(stateOfLed == true) {
         ledStateString = "On";
       }
+      if(onPressedFlag != true) {
         builder.clear();
         builder.addString('on');
         client.publishMessage(pubTopic, MqttQos.exactlyOnce, builder.payload!);
+        onPressedFlag = true;
+        offPressedFlag = false;
+      }
     });
   }
 
@@ -158,9 +164,13 @@ class _MyHomePageState extends State<MyHomePage> {
       if(stateOfLed == false) {
         ledStateString = "Off";
       }
+      if(offPressedFlag != true) {
         builder.clear();
         builder.addString('off');
         client.publishMessage(pubTopic, MqttQos.exactlyOnce, builder.payload!);
+        offPressedFlag = true;
+        onPressedFlag = false;
+      }
     });
   }
 
@@ -183,19 +193,19 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline4,
             ),
             const Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
                   child: Text('Connect'),
                   onPressed: connectToBroker,
                 )),
             Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
                   child: const Text('Start'),
                   onPressed: changeLedStateToTrue,
                 )),
             Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
                   child: const Text('Stop'),
                   onPressed: changeLedStateToFalse,
