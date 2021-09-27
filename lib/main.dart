@@ -3,12 +3,15 @@ import 'dart:async';
 import 'dart:io';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'login.dart';
 
 final client = MqttServerClient('broker.mqttdashboard.com', '');
 bool connStatus = false;
+bool stateOfLed = false;
+String connStatusString = "Bağlı Değil";
 
 void main() {
-  runApp(const MyApp());
+  //runApp(const MyLoginPage());
 }
 
 Future<int> connectToBroker() async {
@@ -83,9 +86,11 @@ void parseArduinoResponse(String payload) {
   debugPrint(payload);
   if(payload == '0') {
     debugPrint("Arduino sent success message");
+    stateOfLed = true;
   }
   else {
     debugPrint("Success message failed!");
+    stateOfLed = false;
   }
 }
 
@@ -104,6 +109,7 @@ void onDisconnected() {
 void onConnected() {
   print('Baglanti gerceklesti');
   connStatus = true;
+  connStatusString = "Bağlı";
 }
 
 void pong() {
@@ -116,11 +122,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'MQTT Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'MQTT Led Switcher'),
+      home: const MyHomePage(title: 'MQTT Control'),
     );
   }
 }
@@ -135,10 +141,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  bool stateOfLed = false;
   bool onPressedFlag = false;
   bool offPressedFlag = false;
-  var ledStateString = "Off";
+  var ledStateString = "Kapalı";
   final pubTopic = 'GsmCit/led';
   final builder = MqttClientPayloadBuilder();
 
@@ -146,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       stateOfLed = true;
       if(stateOfLed == true) {
-        ledStateString = "On";
+        ledStateString = "Açık";
       }
       if(onPressedFlag != true) {
         builder.clear();
@@ -162,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       stateOfLed = false;
       if(stateOfLed == false) {
-        ledStateString = "Off";
+        ledStateString = "Kapalı";
       }
       if(offPressedFlag != true) {
         builder.clear();
@@ -185,29 +190,46 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'State of led:',
-              style: Theme.of(context).textTheme.headline4,
+              'Bağlantı durumu:',
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            Text(
+              connStatusString,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            Text(
+              'Cihaz durumu:',
+              style: Theme.of(context).textTheme.headline6,
             ),
             Text(
               ledStateString,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headline6,
             ),
-            const Padding(
+            Padding(
                 padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
-                  child: Text('Connect'),
-                  onPressed: connectToBroker,
+                  child: Text('Bağlan'),
+                  onPressed:() {
+                    connectToBroker();
+                    Future.delayed(Duration(milliseconds: 3000), () {
+                    setState(() {
+                        if(connStatus == true) {
+                          connStatusString = "Bağlı";
+                        }
+                    });
+                    });
+                  }
                 )),
             Padding(
                 padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
-                  child: const Text('Start'),
+                  child: const Text('Aç'),
                   onPressed: changeLedStateToTrue,
                 )),
             Padding(
                 padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
-                  child: const Text('Stop'),
+                  child: const Text('Kapat'),
                   onPressed: changeLedStateToFalse,
                 )),
             ],
