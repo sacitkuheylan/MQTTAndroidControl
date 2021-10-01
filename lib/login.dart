@@ -36,17 +36,18 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController pass = TextEditingController();
 
   Future login() async {
-    final response = await http.post(Uri.parse("http://10.0.2.2:8888/mqttAndroid/login.php"),
+    final response = await http.post(Uri.parse("http://10.0.2.2:80/mqttAndroid/login.php"),
         body: {
       'username': user.text,
       'password': pass.text,
+          'UserId': "2",
         });
 
     print(response.body);
 
     var datauser = json.decode(response.body);
-    if(datauser == "Success") {
-      Navigator.push(context,MaterialPageRoute(builder: (context) => MyApp()));
+    if(datauser != "Error") {
+      Navigator.push(context,MaterialPageRoute(builder: (context) => MyHomePage(title: "Hoşgeldiniz", imei: datauser.toString())));
       setState(() {
         errorText = "";
       });

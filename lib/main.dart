@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:http/http.dart' as http;
 import 'login.dart';
 
 final client = MqttServerClient('broker.mqttdashboard.com', '');
@@ -13,6 +16,7 @@ String connStatusString = "Bağlı Değil";
 void main() {
   //runApp(const MyLoginPage());
 }
+
 
 Future<int> connectToBroker() async {
   if(connStatus == false) {
@@ -126,25 +130,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'MQTT Control'),
+      home: const MyHomePage(title: 'MQTT Control', imei: 'cit123'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title, required this.imei}) : super(key: key);
   final String title;
+  final String imei;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   bool onPressedFlag = false;
   bool offPressedFlag = false;
   var ledStateString = "Kapalı";
-  final pubTopic = 'GsmCit/led';
   final builder = MqttClientPayloadBuilder();
 
   void changeLedStateToTrue() {
@@ -156,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if(onPressedFlag != true) {
         builder.clear();
         builder.addString('on');
-        client.publishMessage(pubTopic, MqttQos.exactlyOnce, builder.payload!);
+        client.publishMessage(widget.imei, MqttQos.exactlyOnce, builder.payload!);
         onPressedFlag = true;
         offPressedFlag = false;
       }
@@ -172,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if(offPressedFlag != true) {
         builder.clear();
         builder.addString('off');
-        client.publishMessage(pubTopic, MqttQos.exactlyOnce, builder.payload!);
+        client.publishMessage(widget.imei, MqttQos.exactlyOnce, builder.payload!);
         offPressedFlag = true;
         onPressedFlag = false;
       }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mqtt_project_arduino/login.dart';
 import 'main.dart';
 
 void main() {
@@ -27,30 +28,31 @@ var errorText = "";
 
 class _RegisterPageState extends State<RegisterPage> {
 
+  TextEditingController name = TextEditingController();
+  TextEditingController surname = TextEditingController();
+  TextEditingController phone = TextEditingController();
   TextEditingController user = TextEditingController();
   TextEditingController pass = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController imei = TextEditingController();
 
-  Future login() async {
-    final response = await http.post(
-        Uri.parse("http://10.0.2.2:8888/mqttAndroid/login.php"),
-        body: {
-          'username': user.text,
-          'password': pass.text,
-        });
-
-    print(response.body);
-
-    var datauser = json.decode(response.body);
-    if (datauser == "Success") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
-      setState(() {
-        errorText = "";
-      });
-    }
-    else {
-      setState(() {
-        errorText = "Giriş Başarısız Kullanıcı Adı/Şifre Hatalı";
-      });
+  Future register() async {
+    var url = "http://10.0.2.2:80/mqttAndroid/register.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "Name": name.text,
+      "Surname": surname.text,
+      "PhoneNumber": phone.text,
+      "Username": user.text,
+      "Password": pass.text,
+      "Email": email.text,
+      "DeviceIMEI": imei.text
+    });
+    var data = json.decode(response.body);
+    if (data == "Error") {
+      debugPrint("Kullanıcı zaten var debug");
+    } else {
+      debugPrint("Kayıt oldu");
+      Navigator.push(context,MaterialPageRoute(builder: (context) => MyLoginPage()));
     }
   }
 
@@ -62,31 +64,38 @@ class _RegisterPageState extends State<RegisterPage> {
             children: <Widget>[
               Image.asset("assets/images/logo-2x.png"),
               TextField(
-                controller: user,
+                controller: name,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.mail_outline),
                   hintText: 'Ad',
                 ),
               ),
               TextField(
-                controller: user,
+                controller: surname,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.mail_outline),
                   hintText: 'Soyad',
                 ),
               ),
               TextField(
-                controller: user,
+                controller: phone,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.mail_outline),
                   hintText: 'Telefon Numarası',
                 ),
               ),
               TextField(
-                controller: user,
+                controller: email,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.mail_outline),
                   hintText: 'E-Posta Adresi',
+                ),
+              ),
+              TextField(
+                controller: user,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.mail_outline),
+                  hintText: 'Kullanıcı Adı',
                 ),
               ),
               TextField(
@@ -98,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               TextField(
-                controller: user,
+                controller: imei,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.mail_outline),
                   hintText: 'Cihaz Üstünde Bulunan Kod',
@@ -107,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ElevatedButton(
                   child: const Text('Kayıt Ol'),
                   onPressed: () {
-                    login();
+                    register();
                   }
               ),
             ]
