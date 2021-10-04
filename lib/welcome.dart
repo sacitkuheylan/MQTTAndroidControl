@@ -13,7 +13,7 @@ class MyWelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: WelcomePage(),
+        home: const WelcomePage(),
         routes: <String, WidgetBuilder>{
           'main': (BuildContext context) => const MyWelcomePage(),
         });
@@ -21,6 +21,8 @@ class MyWelcomePage extends StatelessWidget {
 }
 
 class WelcomePage extends StatefulWidget {
+  const WelcomePage({Key? key}) : super(key: key);
+
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }
@@ -31,7 +33,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Otkosis")),
+        appBar: AppBar(title: const Text("Otkosis")),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,8 +47,10 @@ class _WelcomePageState extends State<WelcomePage> {
               child: ElevatedButton(
                   child: const Text('Giriş Yap'),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyLoginPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyLoginPage()));
                   }),
             ),
             Padding(
@@ -57,7 +61,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => MyRegisterPage()));
+                            builder: (context) => const MyRegisterPage()));
                   }),
             ),
             Center(
