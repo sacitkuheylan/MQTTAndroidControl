@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mqtt_project_arduino/login.dart';
-import 'main.dart';
 
 void main() {
   runApp(const MyRegisterPage());
@@ -29,7 +28,6 @@ var errorText = "";
 class _RegisterPageState extends State<RegisterPage> {
 
   TextEditingController name = TextEditingController();
-  TextEditingController surname = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController user = TextEditingController();
   TextEditingController pass = TextEditingController();
@@ -39,13 +37,12 @@ class _RegisterPageState extends State<RegisterPage> {
   Future register() async {
     var url = "http://10.0.2.2:80/mqttAndroid/register.php";
     var response = await http.post(Uri.parse(url), body: {
-      "Name": name.text,
-      "Surname": surname.text,
+      "NameSurname": name.text,
       "PhoneNumber": phone.text,
       "Username": user.text,
       "Password": pass.text,
       "Email": email.text,
-      "DeviceIMEI": imei.text
+      "DeviceIMEI": imei.text,
     });
     var data = json.decode(response.body);
     if (data == "Error") {
@@ -67,20 +64,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: name,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.mail_outline),
-                  hintText: 'Ad',
-                ),
-              ),
-              TextField(
-                controller: surname,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.mail_outline),
-                  hintText: 'Soyad',
+                  hintText: 'Ad Soyad',
                 ),
               ),
               TextField(
                 controller: phone,
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.mail_outline),
+                  icon: Icon(Icons.phone_android),
                   hintText: 'Telefon Numarası',
                 ),
               ),
@@ -94,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
               TextField(
                 controller: user,
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.mail_outline),
+                  icon: Icon(Icons.supervised_user_circle_outlined),
                   hintText: 'Kullanıcı Adı',
                 ),
               ),
@@ -108,9 +98,10 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               TextField(
                 controller: imei,
+                maxLength: 15,
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.mail_outline),
-                  hintText: 'Cihaz Üstünde Bulunan Kod',
+                  icon: Icon(Icons.confirmation_number),
+                  hintText: 'Cihaz Üzerinde Bulunan IMEI Numarası',
                 ),
               ),
               ElevatedButton(

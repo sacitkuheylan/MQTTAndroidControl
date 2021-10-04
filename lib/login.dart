@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mqtt_project_arduino/register.dart';
 import 'main.dart';
 
 void main() {
@@ -14,13 +13,12 @@ class MyLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
-      routes: <String,WidgetBuilder> {
-        'main': (BuildContext context) => const MyApp(),
-        'loginPage': (BuildContext context) => LoginPage(),
-      }
-    );
+        debugShowCheckedModeBanner: false,
+        home: LoginPage(),
+        routes: <String, WidgetBuilder>{
+          'main': (BuildContext context) => const MyApp(),
+          'loginPage': (BuildContext context) => LoginPage(),
+        });
   }
 }
 
@@ -28,31 +26,33 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
+
 var errorText = "";
 
 class _LoginPageState extends State<LoginPage> {
-
   TextEditingController user = TextEditingController();
   TextEditingController pass = TextEditingController();
 
   Future login() async {
-    final response = await http.post(Uri.parse("http://10.0.2.2:80/mqttAndroid/login.php"),
-        body: {
+    final response = await http
+        .post(Uri.parse("http://10.0.2.2:80/mqttAndroid/login.php"), body: {
       'username': user.text,
       'password': pass.text,
-          'UserId': "2",
-        });
+    });
 
     print(response.body);
 
     var datauser = json.decode(response.body);
-    if(datauser != "Error") {
-      Navigator.push(context,MaterialPageRoute(builder: (context) => MyHomePage(title: "Hoşgeldiniz", imei: datauser.toString())));
+    if (datauser != "Error") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MyHomePage(title: "Hoşgeldiniz", imei: datauser.toString())));
       setState(() {
         errorText = "";
       });
-    }
-    else {
+    } else {
       setState(() {
         errorText = "Giriş Başarısız Kullanıcı Adı/Şifre Hatalı";
       });
@@ -62,38 +62,49 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Giriş Yap")),
-      body: Column(
-        children: <Widget>[
-          Image.asset("assets/images/logo-2x.png"),
-          TextField(
-            controller: user,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.mail_outline),
-              hintText: 'Kullanıcı Adı',
+        appBar: AppBar(title: Text("Giriş Yap")),
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset("assets/images/logo-2x.png"),
             ),
-          ),
-          TextField(
-            controller: pass,
-            obscureText: true,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.vpn_key),
-              hintText: 'Şifre',
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                controller: user,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.mail_outline),
+                  hintText: 'Kullanıcı Adı',
+                ),
+              ),
             ),
-          ),
-          ElevatedButton(
-            child: const Text('Giriş'),
-            onPressed: () {
-              login();
-            }
-          ),
-          Center(
-            child: Text(
-              errorText,
-              style: Theme.of(context).textTheme.headline6,
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                controller: pass,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.vpn_key),
+                  hintText: 'Şifre',
+                ),
+              ),
             ),
-          ),
-        ],
-      )
-    );
-  }}
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                  child: const Text('Giriş'),
+                  onPressed: () {
+                    login();
+                  }),
+            ),
+            Center(
+              child: Text(
+                errorText,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+          ],
+        ));
+  }
+}

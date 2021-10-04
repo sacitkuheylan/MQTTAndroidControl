@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:mqtt_project_arduino/register.dart';
 import 'login.dart';
-import 'main.dart';
 
 void main() {
   runApp(const MyWelcomePage());
@@ -36,20 +33,33 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Otkosis")),
-        body: Column(
+        body:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset("assets/images/logo-2x.png"),
-            ElevatedButton(
+        Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Image.asset("assets/images/logo-2x.png"),
+        ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child:
+              ElevatedButton(
                 child: const Text('Giriş Yap'),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context) => MyLoginPage()));
                 }
             ),
-            ElevatedButton(
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
                 child: const Text('Kayıt Ol'),
                 onPressed: () {
                   Navigator.push(context,MaterialPageRoute(builder: (context) => MyRegisterPage()));
                 }
+            ),
             ),
             Center(
               child: Text(
