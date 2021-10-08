@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
           TextField(
             controller: name,
             decoration: const InputDecoration(
-              icon: Icon(Icons.mail_outline),
+              icon: Icon(Icons.perm_identity_outlined),
               hintText: 'Ad Soyad',
             ),
           ),
