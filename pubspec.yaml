@@ -27,7 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  mqtt_client: ^7.2.1
+  mqtt_client: ^9.6.1
   http: ^0.13.3
   flutter:
     sdk: flutter

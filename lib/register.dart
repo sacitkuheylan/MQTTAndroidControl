@@ -12,7 +12,7 @@ class MyRegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: RegisterPage(),
     );
@@ -20,6 +20,8 @@ class MyRegisterPage extends StatelessWidget {
 }
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -49,15 +51,15 @@ class _RegisterPageState extends State<RegisterPage> {
       debugPrint("Kullanıcı zaten var debug");
     } else {
       debugPrint("Kayıt oldu");
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyLoginPage()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const MyLoginPage()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Kayıt Ol")),
+        appBar: AppBar(title: const Text("Kayıt Ol")),
         body: Column(children: <Widget>[
           Image.asset("assets/images/logo-2x.png"),
           TextField(

@@ -14,15 +14,17 @@ class MyLoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginPage(),
+        home: const LoginPage(),
         routes: <String, WidgetBuilder>{
           'main': (BuildContext context) => const MyApp(),
-          'loginPage': (BuildContext context) => LoginPage(),
+          'loginPage': (BuildContext context) => const LoginPage(),
         });
   }
 }
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -62,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Giriş Yap")),
+        appBar: AppBar(title: const Text("Giriş Yap")),
         body: Column(
           children: <Widget>[
             Padding(
