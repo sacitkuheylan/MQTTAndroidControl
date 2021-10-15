@@ -34,7 +34,6 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController user = TextEditingController();
   TextEditingController pass = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController imei = TextEditingController();
 
   Future register() async {
     var url = "http://10.0.2.2:80/mqttAndroid/register.php";
@@ -44,7 +43,6 @@ class _RegisterPageState extends State<RegisterPage> {
       "Username": user.text,
       "Password": pass.text,
       "Email": email.text,
-      "DeviceIMEI": imei.text,
     });
     var data = json.decode(response.body);
     if (data == "Error") {
@@ -70,6 +68,8 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           TextField(
+            keyboardType: TextInputType.phone,
+            autocorrect: false,
             controller: phone,
             decoration: const InputDecoration(
               icon: Icon(Icons.phone_android),
@@ -96,14 +96,6 @@ class _RegisterPageState extends State<RegisterPage> {
             decoration: const InputDecoration(
               icon: Icon(Icons.vpn_key),
               hintText: 'Şifre',
-            ),
-          ),
-          TextField(
-            controller: imei,
-            maxLength: 15,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.confirmation_number),
-              hintText: 'Cihaz Üzerinde Bulunan IMEI Numarası',
             ),
           ),
           ElevatedButton(

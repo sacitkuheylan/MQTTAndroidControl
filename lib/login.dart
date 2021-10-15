@@ -1,12 +1,24 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'devicelist.dart';
 import 'main.dart';
 
 void main() {
   runApp(const MyLoginPage());
 }
 
+class User {
+  late int _userId;
+
+  int get userId => _userId;
+
+  set userId(int value) {
+    _userId = value;
+  }
+}
+
+//TODO: Bir şekilde user login sonrası id numarasını global şekilde pasla.
 class MyLoginPage extends StatelessWidget {
   const MyLoginPage({Key? key}) : super(key: key);
 
@@ -49,10 +61,10 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  MyHomePage(title: "Hoşgeldiniz", imei: datauser.toString())));
+              builder: (context) => MyDeviceList(userId: datauser.toString())));
       setState(() {
         errorText = "";
+        print(datauser.toString());
       });
     } else {
       setState(() {
