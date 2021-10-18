@@ -1,9 +1,116 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mqtt_project_arduino/deviceadd.dart';
 import 'dart:convert';
-
 import 'package:mqtt_project_arduino/zerodevice.dart';
+
+final client = MqttServerClient('broker.mqttdashboard.com', '');
+bool connStatus = false;
+bool stateOfLed = false;
+String connStatusString = "Bağlı Değil";
+
+Future<int> connectToBroker() async {
+  if (connStatus == false) {
+    client.logging(on: false);
+    client.keepAlivePeriod = 20;
+    client.onDisconnected = onDisconnected;
+    client.onConnected = onConnected;
+    client.onSubscribed = onSubscribed;
+    client.pongCallback = pong;
+
+    final connMess = MqttConnectMessage()
+        .withClientIdentifier('Mqtt_MyClientUniqueId')
+        .withWillTopic(
+            'willtopic') // If you set this you must set a will message
+        .withWillMessage('Will message')
+        .startClean() // Non persistent session for testing
+        .withWillQos(MqttQos.atLeastOnce);
+    print('EXAMPLE::Mosquitto client connecting....');
+    client.connectionMessage = connMess;
+
+    try {
+      await client.connect();
+    } on NoConnectionException catch (e) {
+      print('client exception - $e');
+      client.disconnect();
+    } on SocketException catch (e) {
+      print('socket exception - $e');
+      client.disconnect();
+    }
+
+    if (client.connectionStatus!.state == MqttConnectionState.connected) {
+      print('Client baglantisi basarili');
+    } else {
+      print('Client baglantisi basarisiz. Sebebi: ${client.connectionStatus}');
+      client.disconnect();
+      exit(-1);
+    }
+
+    const topic = 'GsmCit/ledStatus';
+    client.subscribe(topic, MqttQos.atMostOnce);
+
+    client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
+      final recMess = c![0].payload as MqttPublishMessage;
+      final pt =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      print('Topic: ${c[0].topic}, payload: $pt');
+      print('');
+      parseArduinoResponse(pt);
+    });
+
+    client.published!.listen((MqttPublishMessage message) {});
+
+    const pubTopic = 'arduinoControl';
+    final builder = MqttClientPayloadBuilder();
+    builder.addString('MQTT Connection from Flutter Established!');
+    client.publishMessage(pubTopic, MqttQos.exactlyOnce, builder.payload!);
+
+    /* Baglantinin kapanmasini saglamak icin
+  await MqttUtilities.asyncSleep(120);
+  client.unsubscribe(topic);
+  await MqttUtilities.asyncSleep(2);
+  client.disconnect();
+  */
+  }
+  return 0;
+}
+
+void parseArduinoResponse(String payload) {
+  debugPrint(payload);
+  if (payload == '0') {
+    debugPrint("Arduino sent success message");
+    stateOfLed = true;
+  } else {
+    debugPrint("Success message failed!");
+    stateOfLed = false;
+  }
+}
+
+void onSubscribed(String topic) {
+  print('$topic isimli basliga abone olundu');
+}
+
+void onDisconnected() {
+  print('Disconnect talep edildi - Client disconnection');
+  if (client.connectionStatus!.disconnectionOrigin ==
+      MqttDisconnectionOrigin.solicited) {
+    print('Disconnect talebi gerceklestirildi');
+  }
+}
+
+void onConnected() {
+  print('Baglanti gerceklesti');
+  connStatus = true;
+  connStatusString = "Bağlı";
+}
+
+void pong() {
+  print("Broker'a ping gonderildi");
+}
 
 class Spacecraft {
   final int id;
@@ -56,9 +163,9 @@ class CustomListView extends StatelessWidget {
               'Cihaz Eklemek için butonu kullanın',
             ),
             Padding(
-                padding: EdgeInsets.all(7.0),
+                padding: const EdgeInsets.all(7.0),
                 child: ElevatedButton(
-                    child: Text('Cihaz Ekle'), onPressed: () {})),
+                    child: const Text('Cihaz Ekle'), onPressed: () {})),
           ],
         ),
       ),
@@ -159,6 +266,51 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   @override
+  void initState() {
+    connectToBroker();
+    super.initState();
+  }
+
+  bool onPressedFlag = false;
+  bool offPressedFlag = false;
+  var ledStateString = "Kapalı";
+  final builder = MqttClientPayloadBuilder();
+
+  void changeLedStateToTrue() {
+    setState(() {
+      stateOfLed = true;
+      if (stateOfLed == true) {
+        ledStateString = "Açık";
+      }
+      if (onPressedFlag != true) {
+        builder.clear();
+        builder.addString('on');
+        client.publishMessage(widget.value.DeviceIMEI.toString(),
+            MqttQos.exactlyOnce, builder.payload!);
+        onPressedFlag = true;
+        offPressedFlag = false;
+      }
+    });
+  }
+
+  void changeLedStateToFalse() {
+    setState(() {
+      stateOfLed = false;
+      if (stateOfLed == false) {
+        ledStateString = "Kapalı";
+      }
+      if (offPressedFlag != true) {
+        builder.clear();
+        builder.addString('off');
+        client.publishMessage(widget.value.DeviceIMEI.toString(),
+            MqttQos.exactlyOnce, builder.payload!);
+        offPressedFlag = true;
+        onPressedFlag = false;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Cihaz Detayları')),
@@ -190,7 +342,8 @@ class _SecondScreenState extends State<SecondScreen> {
                   //is the corresponding StatefulWidget instance.
                   child: Text(
                     'Cihaz IMEI : ${widget.value.DeviceIMEI}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20),
                     textAlign: TextAlign.left,
                   ),
                   padding: const EdgeInsets.all(5.0),
@@ -198,7 +351,8 @@ class _SecondScreenState extends State<SecondScreen> {
                 Padding(
                   child: Text(
                     'Cihaz Adı : ${widget.value.DeviceName}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20),
                     textAlign: TextAlign.left,
                   ),
                   padding: const EdgeInsets.all(5.0),
@@ -206,66 +360,70 @@ class _SecondScreenState extends State<SecondScreen> {
                 Padding(
                   child: Text(
                     'Cihaz Lokasyonu : ${widget.value.DeviceLocation}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20),
                     textAlign: TextAlign.left,
                   ),
                   padding: const EdgeInsets.all(5.0),
                 ),
-                Card(
-                  elevation: 5.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.blue,
-                          width: 8,
-                        ),
-                        borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.all(20.0),
-                    margin: const EdgeInsets.all(20.0),
-                    child: Padding(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const Text(
-                              'Bağlantı durumu: Bağlı',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Text(
-                              'Cihaz durumu: Açık',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            Padding(
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Card(
+                    elevation: 5.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.blue,
+                            width: 8,
+                          ),
+                          borderRadius: BorderRadius.circular(6)),
+                      padding: const EdgeInsets.all(10.0),
+                      margin: const EdgeInsets.all(10.0),
+                      child: Padding(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Text(
+                                'Cihaz Durumu',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25),
+                                textAlign: TextAlign.center,
+                              ),
+                              Padding(
                                 padding: EdgeInsets.all(7.0),
-                                child: ElevatedButton(
-                                    child: Text('Bağlan'),
+                                child: Text(
+                                  ledStateString,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.all(7.0),
+                                  child: ElevatedButton(
+                                    child: const Text('Aç'),
                                     onPressed: () {
-                                      Future.delayed(
-                                          Duration(milliseconds: 3000), () {
-                                        setState(() {});
-                                      });
-                                    })),
-                            Padding(
-                                padding: EdgeInsets.all(7.0),
-                                child: ElevatedButton(
-                                  child: const Text('Aç'),
-                                  onPressed: () {},
-                                )),
-                            Padding(
-                                padding: EdgeInsets.all(7.0),
-                                child: ElevatedButton(
-                                  child: const Text('Kapat'),
-                                  onPressed: () {},
-                                )),
-                          ],
+                                      changeLedStateToTrue();
+                                    },
+                                  )),
+                              Padding(
+                                  padding: EdgeInsets.all(7.0),
+                                  child: ElevatedButton(
+                                    child: const Text('Kapat'),
+                                    onPressed: () {
+                                      changeLedStateToFalse();
+                                    },
+                                  )),
+                            ],
+                          ),
                         ),
+                        padding: const EdgeInsets.all(50.0),
                       ),
-                      padding: const EdgeInsets.all(50.0),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -289,7 +447,10 @@ class MyDeviceList extends StatelessWidget {
         appBar: AppBar(title: const Text('Cihaz Listesi')),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Add your onPressed code here!
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyAddDevicePage(IdData: userId)));
           },
           child: const Icon(Icons.add),
           backgroundColor: Colors.blue,

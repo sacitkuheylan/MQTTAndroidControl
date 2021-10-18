@@ -61,6 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
         body: Column(children: <Widget>[
           Image.asset("assets/images/logo-2x.png"),
           TextField(
+            autocorrect: false,
             controller: name,
             decoration: const InputDecoration(
               icon: Icon(Icons.perm_identity_outlined),
@@ -68,8 +69,8 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           TextField(
-            keyboardType: TextInputType.phone,
             autocorrect: false,
+            keyboardType: TextInputType.phone,
             controller: phone,
             decoration: const InputDecoration(
               icon: Icon(Icons.phone_android),
@@ -77,6 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           TextField(
+            autocorrect: false,
             controller: email,
             decoration: const InputDecoration(
               icon: Icon(Icons.mail_outline),
@@ -84,6 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           TextField(
+            autocorrect: false,
             controller: user,
             decoration: const InputDecoration(
               icon: Icon(Icons.supervised_user_circle_outlined),
@@ -91,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           TextField(
+            autocorrect: false,
             controller: pass,
             obscureText: true,
             decoration: const InputDecoration(
