@@ -176,7 +176,8 @@ class CustomListView extends StatelessWidget {
         title: Card(
           elevation: 5.0,
           child: Container(
-            decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
+            decoration:
+                BoxDecoration(border: Border.all(color: Color((0xFF81ECEC)))),
             padding: const EdgeInsets.all(20.0),
             margin: const EdgeInsets.all(20.0),
             child: Column(
@@ -312,7 +313,17 @@ class _SecondScreenState extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Cihaz Detayları')),
+      appBar: AppBar(
+        title: const Text('Cihaz Detayları'),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back,
+          ),
+        ),
+      ),
       body: Center(
         child: Card(
           elevation: 5.0,
@@ -441,7 +452,7 @@ class MyDeviceList extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         backgroundColor: Color(0xFF81ECEC),
-        primarySwatch: Colors.blue,
+        //primarySwatch: Colors.blue,
       ),
       home: Scaffold(
         appBar: AppBar(title: const Text('Cihaz Listesi')),

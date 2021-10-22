@@ -57,56 +57,228 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Kayıt Ol")),
-        body: Column(children: <Widget>[
-          Image.asset("assets/images/logo-2x.png"),
-          TextField(
-            autocorrect: false,
-            controller: name,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.perm_identity_outlined),
-              hintText: 'Ad Soyad',
+        backgroundColor: Color(0xFF81ECEC),
+        appBar: AppBar(
+          backgroundColor: Color(0xFF81ECEC),
+          leading: InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MyHomePageWidget()));
+            },
+            child: const Icon(
+              Icons.arrow_back,
             ),
           ),
-          TextField(
-            autocorrect: false,
-            keyboardType: TextInputType.phone,
-            controller: phone,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.phone_android),
-              hintText: 'Telefon Numarası',
+          title: const Text(
+            'Kayıt Ol',
+          ),
+          centerTitle: true,
+          elevation: 4,
+        ),
+        body: SingleChildScrollView(
+            child: Column(children: <Widget>[
+          Align(
+            alignment: AlignmentDirectional(0, 0),
+            child: Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(60),
+                child: Image.asset(
+                  'assets/images/logo-2x.png',
+                  width: 250,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
             ),
           ),
-          TextField(
-            autocorrect: false,
-            controller: email,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.mail_outline),
-              hintText: 'E-Posta Adresi',
-            ),
-          ),
-          TextField(
-            autocorrect: false,
-            controller: user,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.supervised_user_circle_outlined),
-              hintText: 'Kullanıcı Adı',
-            ),
-          ),
-          TextField(
-            autocorrect: false,
-            controller: pass,
-            obscureText: true,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.vpn_key),
-              hintText: 'Şifre',
-            ),
-          ),
-          ElevatedButton(
-              child: const Text('Kayıt Ol'),
-              onPressed: () {
-                register();
-              }),
-        ]));
+          Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+              child: Card(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  color: Color(0xFF0984E3),
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Align(
+                      alignment: const AlignmentDirectional(0, 0.2),
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 20, 30, 10),
+                              child: TextFormField(
+                                controller: name,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  hintText: 'Ad Soyad',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  prefixIcon: const Icon(
+                                    Icons.perm_identity_outlined,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              child: TextFormField(
+                                controller: phone,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  hintText: 'Telefon Numarası',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  prefixIcon: const Icon(
+                                    Icons.phone_android,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              child: TextFormField(
+                                controller: email,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  hintText: 'E-Posta Adresi',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  prefixIcon: const Icon(
+                                    Icons.mail_outline,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              child: TextFormField(
+                                controller: user,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  hintText: 'Kullanıcı Adı',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  prefixIcon: const Icon(
+                                    Icons.supervised_user_circle_outlined,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              child: TextFormField(
+                                controller: pass,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: 'Şifre',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  prefixIcon: const Icon(
+                                    Icons.vpn_key,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              child: ElevatedButton(
+                                  child: const Text('Kayıt Ol'),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.green,
+                                    onPrimary: Colors.white,
+                                    shadowColor: Colors.greenAccent,
+                                    elevation: 3,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(32.0)),
+                                    minimumSize: Size(350, 40), //////// HERE
+                                  ),
+                                  onPressed: () {
+                                    register();
+                                  }),
+                            ),
+                          ]))))
+        ])));
   }
 }

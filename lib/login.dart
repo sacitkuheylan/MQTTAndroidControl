@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:toaster/toaster.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:mqtt_project_arduino/register.dart';
+import 'devicelist.dart';
+import 'main.dart';
 
 void main() {
   runApp(const MyHomePageWidget());
@@ -26,6 +31,8 @@ class HomePageWidget extends StatefulWidget {
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
 
+var errorText = "";
+
 class _HomePageWidgetState extends State<HomePageWidget> {
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
@@ -35,175 +42,188 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
     passwordVisibility = false;
+  }
+
+  TextEditingController user = TextEditingController();
+  TextEditingController pass = TextEditingController();
+
+  Future login() async {
+    final response = await http
+        .post(Uri.parse("http://10.0.2.2:80/mqttAndroid/login.php"), body: {
+      'username': user.text,
+      'password': pass.text,
+    });
+
+    print(response.body);
+
+    var datauser = json.decode(response.body);
+    if (datauser != "Error") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyDeviceList(userId: datauser.toString())));
+      setState(() {
+        errorText = "";
+        print(datauser.toString());
+      });
+    } else {
+      setState(() {
+        errorText = "Giriş Başarısız Kullanıcı Adı/Şifre Hatalı";
+        Toaster.toast(message: "Giriş Başarısız!", duration: Duration.LONG);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Color(0xFF81ECEC),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: AlignmentDirectional(0, 0),
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(60),
-                        child: Image.asset(
-                          'assets/images/logo-2x.png',
-                          width: 250,
-                          fit: BoxFit.fitWidth,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Color(0xFF81ECEC),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(0, 0),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: Image.asset(
+                            'assets/images/logo-2x.png',
+                            width: 250,
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
                       ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Color(0xFF0984E3),
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  color: Color(0xFF0984E3),
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Align(
-                    alignment: AlignmentDirectional(0, 0.2),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(30, 20, 30, 10),
-                          child: TextFormField(
-                            controller: textController1,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              hintText: 'Kullanıcı Adı',
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1,
+                    child: Align(
+                      alignment: AlignmentDirectional(0, 0.2),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(30, 20, 30, 10),
+                            child: TextFormField(
+                              controller: user,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                hintText: 'Kullanıcı Adı',
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1,
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white,
-                              prefixIcon: const Icon(
-                                Icons.person,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
-                          child: TextFormField(
-                            controller: textController2,
-                            obscureText: !passwordVisibility,
-                            decoration: InputDecoration(
-                              hintText: 'Şifre',
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white,
-                              prefixIcon: const Icon(
-                                Icons.vpn_key,
-                              ),
-                              suffixIcon: InkWell(
-                                onTap: () => setState(
-                                  () =>
-                                      passwordVisibility = !passwordVisibility,
-                                ),
-                                child: Icon(
-                                  passwordVisibility
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  color: Color(0xFF757575),
-                                  size: 22,
+                                filled: true,
+                                fillColor: Colors.white,
+                                prefixIcon: const Icon(
+                                  Icons.person,
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
-                          child: Text(
-                            "Şifremi Unuttum",
-                            style: TextStyle(color: Colors.white),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                            child: TextFormField(
+                              controller: pass,
+                              obscureText: !passwordVisibility,
+                              decoration: InputDecoration(
+                                hintText: 'Şifre',
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Color(0x00000000),
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                filled: true,
+                                fillColor: Colors.white,
+                                prefixIcon: const Icon(
+                                  Icons.vpn_key,
+                                ),
+                                suffixIcon: InkWell(
+                                  onTap: () => setState(
+                                    () => passwordVisibility =
+                                        !passwordVisibility,
+                                  ),
+                                  child: Icon(
+                                    passwordVisibility
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: Color(0xFF757575),
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        )
-                      ],
+                          const Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                            child: Text(
+                              "Şifremi Unuttum",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: AlignmentDirectional(0, -0.95),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              10, 10, 10, 15),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.green,
-                              onPrimary: Colors.white,
-                              shadowColor: Colors.greenAccent,
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(32.0)),
-                              minimumSize: Size(400, 40), //////// HERE
-                            ),
-                            child: const Text('Giriş Yap'),
-                            onPressed: () {},
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(10, 0, 10, 15),
-                          child: ElevatedButton(
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional(0, -0.95),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                10, 10, 10, 15),
+                            child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.green,
                                 onPrimary: Colors.white,
@@ -213,15 +233,42 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     borderRadius: BorderRadius.circular(32.0)),
                                 minimumSize: Size(400, 40), //////// HERE
                               ),
-                              child: const Text('Kayıt Ol'),
-                              onPressed: () {}),
-                        )
-                      ],
+                              child: const Text('Giriş Yap'),
+                              onPressed: () {
+                                login();
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(10, 0, 10, 15),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green,
+                                  onPrimary: Colors.white,
+                                  shadowColor: Colors.greenAccent,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(32.0)),
+                                  minimumSize: Size(400, 40), //////// HERE
+                                ),
+                                child: const Text('Kayıt Ol'),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MyRegisterPage()));
+                                }),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
