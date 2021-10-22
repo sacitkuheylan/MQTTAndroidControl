@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mqtt_project_arduino/deviceadd.dart';
 import 'dart:convert';
-import 'package:mqtt_project_arduino/zerodevice.dart';
 
 final client = MqttServerClient('broker.mqttdashboard.com', '');
 bool connStatus = false;
@@ -441,16 +440,18 @@ class MyDeviceList extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        backgroundColor: Color(0xFF81ECEC),
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
         appBar: AppBar(title: const Text('Cihaz Listesi')),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyAddDevicePage(IdData: userId)));
+            var route = MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  MyAddDevicePage(idData: userId),
+            );
+            Navigator.of(context).push(route);
           },
           child: const Icon(Icons.add),
           backgroundColor: Colors.blue,

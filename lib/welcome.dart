@@ -47,10 +47,10 @@ class _WelcomePageState extends State<WelcomePage> {
               child: ElevatedButton(
                   child: const Text('Giriş Yap'),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MyLoginPage()));
+                    //Navigator.push(
+                    //    context,
+                    //    MaterialPageRoute(
+                    //        builder: (context) => const MyLoginPage()));
                   }),
             ),
             Padding(

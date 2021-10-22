@@ -49,8 +49,8 @@ class _RegisterPageState extends State<RegisterPage> {
       debugPrint("Kullanıcı zaten var debug");
     } else {
       debugPrint("Kayıt oldu");
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const MyLoginPage()));
+      //Navigator.push(context,
+      //MaterialPageRoute(builder: (context) => const MyLoginPage()));
     }
   }
 

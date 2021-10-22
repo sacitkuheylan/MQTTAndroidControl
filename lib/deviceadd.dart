@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mqtt_project_arduino/devicelist.dart';
 import 'package:http/http.dart' as http;
@@ -9,27 +8,28 @@ void main() {
 }
 
 class MyAddDevicePage extends StatelessWidget {
-  const MyAddDevicePage({Key? key, required this.IdData}) : super(key: key);
-  final String IdData;
+  const MyAddDevicePage({Key? key, required this.idData}) : super(key: key);
+  final String idData;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: AddDevicePage(IdData: IdData),
-        routes: const <String, WidgetBuilder>{});
+        home: AddDevicePage(),
+        routes: <String, WidgetBuilder>{});
   }
 }
 
 class AddDevicePage extends StatefulWidget {
-  const AddDevicePage({Key? key, required this.IdData}) : super(key: key);
-  final String IdData;
+  const AddDevicePage({Key? key}) : super(key: key);
 
   @override
   _AddDevicePageState createState() => _AddDevicePageState();
 }
 
 class _AddDevicePageState extends State<AddDevicePage> {
+  var idData;
+
   TextEditingController imei = TextEditingController();
   TextEditingController devicename = TextEditingController();
   TextEditingController devicelocation = TextEditingController();
@@ -44,7 +44,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
     });
     var data = json.decode(response.body);
     if (data == "Error") {
-      debugPrint("Cihaz zaten var debug");
+      debugPrint("Bu IMEI Kayıtlı");
     } else {
       debugPrint("Cihaz kayıt oldu");
       Navigator.push(

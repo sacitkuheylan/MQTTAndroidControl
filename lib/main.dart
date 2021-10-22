@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:http/http.dart' as http;
-import 'login.dart';
 
 final client = MqttServerClient('broker.mqttdashboard.com', '');
 bool connStatus = false;
@@ -17,9 +13,8 @@ void main() {
   //runApp(const MyLoginPage());
 }
 
-
 Future<int> connectToBroker() async {
-  if(connStatus == false) {
+  if (connStatus == false) {
     client.logging(on: false);
     client.keepAlivePeriod = 20;
     client.onDisconnected = onDisconnected;
@@ -30,7 +25,7 @@ Future<int> connectToBroker() async {
     final connMess = MqttConnectMessage()
         .withClientIdentifier('Mqtt_MyClientUniqueId')
         .withWillTopic(
-        'willtopic') // If you set this you must set a will message
+            'willtopic') // If you set this you must set a will message
         .withWillMessage('Will message')
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
@@ -60,16 +55,14 @@ Future<int> connectToBroker() async {
 
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
       final recMess = c![0].payload as MqttPublishMessage;
-      final pt = MqttPublishPayload.bytesToStringAsString(
-          recMess.payload.message);
+      final pt =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       print('Topic: ${c[0].topic}, payload: $pt');
       print('');
       parseArduinoResponse(pt);
     });
 
-    client.published!.listen((MqttPublishMessage message) {
-
-    });
+    client.published!.listen((MqttPublishMessage message) {});
 
     const pubTopic = 'arduinoControl';
     final builder = MqttClientPayloadBuilder();
@@ -88,11 +81,10 @@ Future<int> connectToBroker() async {
 
 void parseArduinoResponse(String payload) {
   debugPrint(payload);
-  if(payload == '0') {
+  if (payload == '0') {
     debugPrint("Arduino sent success message");
     stateOfLed = true;
-  }
-  else {
+  } else {
     debugPrint("Success message failed!");
     stateOfLed = false;
   }
@@ -136,7 +128,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title, required this.imei}) : super(key: key);
+  const MyHomePage({Key? key, required this.title, required this.imei})
+      : super(key: key);
   final String title;
   final String imei;
 
@@ -153,13 +146,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void changeLedStateToTrue() {
     setState(() {
       stateOfLed = true;
-      if(stateOfLed == true) {
+      if (stateOfLed == true) {
         ledStateString = "Açık";
       }
-      if(onPressedFlag != true) {
+      if (onPressedFlag != true) {
         builder.clear();
         builder.addString('on');
-        client.publishMessage(widget.imei, MqttQos.exactlyOnce, builder.payload!);
+        client.publishMessage(
+            widget.imei, MqttQos.exactlyOnce, builder.payload!);
         onPressedFlag = true;
         offPressedFlag = false;
       }
@@ -169,13 +163,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void changeLedStateToFalse() {
     setState(() {
       stateOfLed = false;
-      if(stateOfLed == false) {
+      if (stateOfLed == false) {
         ledStateString = "Kapalı";
       }
-      if(offPressedFlag != true) {
+      if (offPressedFlag != true) {
         builder.clear();
         builder.addString('off');
-        client.publishMessage(widget.imei, MqttQos.exactlyOnce, builder.payload!);
+        client.publishMessage(
+            widget.imei, MqttQos.exactlyOnce, builder.payload!);
         offPressedFlag = true;
         onPressedFlag = false;
       }
@@ -211,18 +206,17 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
                 padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
-                  child: Text('Bağlan'),
-                  onPressed:() {
-                    connectToBroker();
-                    Future.delayed(Duration(milliseconds: 3000), () {
-                    setState(() {
-                        if(connStatus == true) {
-                          connStatusString = "Bağlı";
-                        }
-                    });
-                    });
-                  }
-                )),
+                    child: Text('Bağlan'),
+                    onPressed: () {
+                      connectToBroker();
+                      Future.delayed(Duration(milliseconds: 3000), () {
+                        setState(() {
+                          if (connStatus == true) {
+                            connStatusString = "Bağlı";
+                          }
+                        });
+                      });
+                    })),
             Padding(
                 padding: EdgeInsets.all(7.0),
                 child: ElevatedButton(
@@ -235,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: const Text('Kapat'),
                   onPressed: changeLedStateToFalse,
                 )),
-            ],
+          ],
         ),
       ),
     );
