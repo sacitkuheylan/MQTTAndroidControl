@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:toaster/toaster.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mqtt_project_arduino/register.dart';
 import 'devicelist.dart';
-import 'main.dart';
+import 'forgotpass.dart';
 
 void main() {
   runApp(const MyHomePageWidget());
@@ -25,7 +24,7 @@ class MyHomePageWidget extends StatelessWidget {
 }
 
 class HomePageWidget extends StatefulWidget {
-  HomePageWidget({Key? key}) : super(key: key);
+  const HomePageWidget({Key? key}) : super(key: key);
 
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
@@ -69,8 +68,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       });
     } else {
       setState(() {
-        errorText = "Giriş Başarısız Kullanıcı Adı/Şifre Hatalı";
-        Toaster.toast(message: "Giriş Başarısız!", duration: Duration.LONG);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Giriş Başarısız')));
       });
     }
   }
@@ -113,7 +112,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                   child: Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Color(0xFF0984E3),
+                    color: Color(0xFF2c3e50), //Color(0xFF0984E3),
                     elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
@@ -198,14 +197,21 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               ),
                             ),
                           ),
-                          const Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
-                            child: Text(
-                              "Şifremi Unuttum",
-                              style: TextStyle(color: Colors.white),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                30, 0, 30, 10),
+                            child: InkWell(
+                              child: const Text("Şifremi Unuttum",
+                                  style: TextStyle(color: Colors.white)),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MyForgotPage()));
+                              },
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -213,9 +219,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 ),
                 Expanded(
                   child: Align(
-                    alignment: AlignmentDirectional(0, -0.95),
+                    alignment: const AlignmentDirectional(0, -0.95),
                     child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -231,7 +238,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 elevation: 3,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(32.0)),
-                                minimumSize: Size(400, 40), //////// HERE
+                                minimumSize: const Size(400, 40), //////// HERE
                               ),
                               child: const Text('Giriş Yap'),
                               onPressed: () {
@@ -240,8 +247,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(10, 0, 10, 15),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                10, 0, 10, 15),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.green,
@@ -251,7 +258,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(32.0)),
-                                  minimumSize: Size(400, 40), //////// HERE
+                                  minimumSize:
+                                      const Size(400, 40), //////// HERE
                                 ),
                                 child: const Text('Kayıt Ol'),
                                 onPressed: () {

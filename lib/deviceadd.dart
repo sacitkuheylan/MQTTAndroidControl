@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mqtt_project_arduino/devicelist.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,7 +31,7 @@ class AddDevicePage extends StatefulWidget {
 }
 
 class _AddDevicePageState extends State<AddDevicePage> {
-  _AddDevicePageState({Key? key, required this.idData}) : super();
+  _AddDevicePageState({required this.idData}) : super();
   var idData;
 
   TextEditingController imei = TextEditingController();
@@ -46,8 +47,10 @@ class _AddDevicePageState extends State<AddDevicePage> {
       "DeviceLocation": devicelocation.text.toString(),
     });
     var data = json.decode(response.body);
-    if (data == "Error") {
-      debugPrint("Bu IMEI Kayıtlı");
+    if (data == "Bu IMEI Kayıtlı") {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content:
+              Text('Kaydetmek istediğiniz cihaz daha önce kayıt edilmiş')));
     } else {
       debugPrint("Cihaz kayıt oldu");
       Navigator.push(
@@ -74,6 +77,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
         child: Scaffold(
             appBar: AppBar(
               title: const Text("Cihaz Ekle"),
+              backgroundColor: const Color(0xFF2c3e50),
               leading: InkWell(
                 onTap: () {
                   Navigator.push(
@@ -92,9 +96,12 @@ class _AddDevicePageState extends State<AddDevicePage> {
               TextFormField(
                 obscureText: false,
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(15),
+                ],
                 controller: imei,
                 decoration: InputDecoration(
-                  hintText: 'IMEI',
+                  hintText: 'IMEI (15 Haneli)',
                   enabledBorder: UnderlineInputBorder(
                     borderSide: const BorderSide(
                       color: Colors.black,
@@ -183,10 +190,30 @@ class _AddDevicePageState extends State<AddDevicePage> {
                         elevation: 3,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32.0)),
-                        minimumSize: Size(350, 40), //////// HERE
+                        minimumSize: const Size(350, 40),
                       ),
                       onPressed: () {
-                        register();
+                        if (devicename.text.contains(RegExp(r'[0-9]')) &&
+                            devicelocation.text.contains(RegExp(r'[0-9]'))) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text(
+                                  'Cihaz ismi ve/veya Lokasyonu Sadece Harf İçermelidir')));
+                        } else if (imei.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Eksik veya Hatalı IMEI Girdiniz')));
+                        } else if (devicename.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Cihaz ismi boş olamaz')));
+                        } else if (devicelocation.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Cihaz lokasyonu boş olamaz')));
+                        } else {
+                          register();
+                        }
                       })),
             ])));
   }

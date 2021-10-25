@@ -4,33 +4,31 @@ import 'package:http/http.dart' as http;
 import 'package:mqtt_project_arduino/login.dart';
 
 void main() {
-  runApp(const MyRegisterPage());
+  runApp(const MyForgotPage());
 }
 
-bool passwordVisibility = false;
-
-class MyRegisterPage extends StatelessWidget {
-  const MyRegisterPage({Key? key}) : super(key: key);
+class MyForgotPage extends StatelessWidget {
+  const MyForgotPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegisterPage(),
+      home: ForgotPage(),
     );
   }
 }
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class ForgotPage extends StatefulWidget {
+  const ForgotPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _ForgotPageState createState() => _ForgotPageState();
 }
 
 var errorText = "";
 
-class _RegisterPageState extends State<RegisterPage> {
+class _ForgotPageState extends State<ForgotPage> {
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController user = TextEditingController();
@@ -75,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           title: const Text(
-            'Kayıt Ol',
+            'Şifremi Unuttum',
           ),
           centerTitle: true,
           elevation: 4,
@@ -97,13 +95,13 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+              padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
               child: Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   color: Color(0xFF2c3e50), //Color(0xFF0984E3),
                   elevation: 10,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   child: Align(
                       alignment: const AlignmentDirectional(0, 0.2),
@@ -114,37 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           children: [
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  30, 20, 30, 10),
-                              child: TextFormField(
-                                controller: name,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  hintText: 'Ad Soyad',
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  prefixIcon: const Icon(
-                                    Icons.perm_identity_outlined,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                                  30, 15, 30, 10),
                               child: TextFormField(
                                 controller: phone,
                                 obscureText: false,
@@ -208,79 +176,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
                               child: TextFormField(
-                                controller: user,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  hintText: 'Kullanıcı Adı',
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  prefixIcon: const Icon(
-                                    Icons.supervised_user_circle_outlined,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
-                              child: TextFormField(
-                                controller: pass,
-                                obscureText: !passwordVisibility,
-                                decoration: InputDecoration(
-                                  hintText: 'Şifre',
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  prefixIcon: const Icon(
-                                    Icons.vpn_key,
-                                  ),
-                                  suffixIcon: InkWell(
-                                    onTap: () => setState(
-                                      () => passwordVisibility =
-                                          !passwordVisibility,
-                                    ),
-                                    child: Icon(
-                                      passwordVisibility
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
-                                      color: Color(0xFF757575),
-                                      size: 22,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
-                              child: TextFormField(
                                 controller: imei,
                                 keyboardType: TextInputType.number,
                                 obscureText: true,
@@ -309,10 +204,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 15, 30, 10),
                               child: ElevatedButton(
-                                  child: const Text('Kayıt Ol'),
+                                  child: const Text('Şifre Oluştur'),
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.green,
                                     onPrimary: Colors.white,
@@ -321,42 +216,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(32.0)),
-                                    minimumSize: Size(350, 40), //////// HERE
+                                    minimumSize:
+                                        const Size(350, 40), //////// HERE
                                   ),
                                   onPressed: () {
-                                    if (name.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content:
-                                                  Text('Ad Soyad boş olamaz')));
-                                    } else if (phone.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  'Telefon numarası boş olamaz')));
-                                    } else if (email.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content:
-                                                  Text('E-Posta boş olamaz')));
-                                    } else if (user.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  'Kullanıcı adı boş olamaz')));
-                                    } else if (pass.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content:
-                                                  Text('Şifre boş olamaz')));
-                                    } else if (imei.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  'Cihaz IMEI boş olamaz')));
-                                    } else {
-                                      register();
-                                    }
+                                    register();
                                   }),
                             ),
                           ]))))

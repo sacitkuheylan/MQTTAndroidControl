@@ -184,13 +184,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.2"
-  toaster:
-    dependency: "direct main"
-    description:
-      name: toaster
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2"
   typed_data:
     dependency: transitive
     description:

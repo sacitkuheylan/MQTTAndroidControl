@@ -28,7 +28,7 @@ Future<int> connectToBroker() async {
         .withWillMessage('Will message')
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
-    print('EXAMPLE::Mosquitto client connecting....');
+    print('Mosquitto client connecting....');
     client.connectionMessage = connMess;
 
     try {
@@ -113,8 +113,8 @@ void pong() {
 
 class Spacecraft {
   final int id;
-  final int DeviceIMEI;
-  final String DeviceName, DeviceLocation;
+  var DeviceIMEI;
+  var DeviceName, DeviceLocation;
 
   Spacecraft({
     required this.id,
@@ -151,7 +151,8 @@ class CustomListView extends StatelessWidget {
   Widget noDeviceRegistered() {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cihaz Listesi"),
+        title: const Text("Cihaz Listesi"),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Center(
         child: Column(
@@ -176,8 +177,8 @@ class CustomListView extends StatelessWidget {
         title: Card(
           elevation: 5.0,
           child: Container(
-            decoration:
-                BoxDecoration(border: Border.all(color: Color((0xFF81ECEC)))),
+            decoration: BoxDecoration(
+                border: Border.all(color: const Color((0xFF81ECEC)))),
             padding: const EdgeInsets.all(20.0),
             margin: const EdgeInsets.all(20.0),
             child: Column(
@@ -185,27 +186,31 @@ class CustomListView extends StatelessWidget {
                 Padding(
                     child: Text(
                       spacecraft.DeviceName,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color(0xFF2c3e50)),
                       textAlign: TextAlign.right,
                     ),
                     padding: const EdgeInsets.all(1.0)),
-                Row(children: <Widget>[
-                  Padding(
-                      child: Text(
-                        "IMEI: " + spacecraft.DeviceIMEI.toString(),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                      padding: const EdgeInsets.all(1.0)),
-                  const Text(" | "),
-                  Padding(
-                      child: Text(
-                        "Yer: " + spacecraft.DeviceLocation,
-                        style: const TextStyle(fontStyle: FontStyle.italic),
-                        textAlign: TextAlign.center,
-                      ),
-                      padding: const EdgeInsets.all(1.0)),
-                ]),
+                Padding(
+                    child: Text(
+                      "IMEI: " + spacecraft.DeviceIMEI.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 15),
+                      textAlign: TextAlign.center,
+                    ),
+                    padding: const EdgeInsets.all(1.0)),
+                Padding(
+                    child: Text(
+                      "Yer: " + spacecraft.DeviceLocation,
+                      style: const TextStyle(
+                          fontStyle: FontStyle.italic, fontSize: 15),
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                    padding: const EdgeInsets.all(1.0)),
               ],
             ),
           ),
@@ -314,7 +319,10 @@ class _SecondScreenState extends State<SecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cihaz Detayları'),
+        title: const Text(
+          'Cihaz Detayları',
+        ),
+        backgroundColor: const Color(0xFF2c3e50),
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -325,117 +333,136 @@ class _SecondScreenState extends State<SecondScreen> {
         ),
       ),
       body: Center(
-        child: Card(
-          elevation: 5.0,
-          child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue,
-                  width: 8,
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color(0xFF81ECEC),
+                width: 0,
+              ),
+              borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: <Widget>[
+              const Padding(
+                child: Text(
+                  'Cihaz Detayları',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  textAlign: TextAlign.center,
                 ),
-                borderRadius: BorderRadius.circular(12)),
-            padding: const EdgeInsets.all(10.0),
-            margin: const EdgeInsets.all(10.0),
-            child: Column(
-              children: <Widget>[
-                const Padding(
-                  child: Text(
-                    'Cihaz Detayları',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                    textAlign: TextAlign.center,
-                  ),
-                  padding: EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(20.0),
+              ),
+              Padding(
+                //`widget` is the current configuration. A State object's configuration
+                //is the corresponding StatefulWidget instance.
+                child: Text(
+                  'Cihaz IMEI : ${widget.value.DeviceIMEI}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                  textAlign: TextAlign.left,
                 ),
-                Padding(
-                  //`widget` is the current configuration. A State object's configuration
-                  //is the corresponding StatefulWidget instance.
-                  child: Text(
-                    'Cihaz IMEI : ${widget.value.DeviceIMEI}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.left,
-                  ),
-                  padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(5.0),
+              ),
+              Padding(
+                child: Text(
+                  'Cihaz Adı : ${widget.value.DeviceName}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                  textAlign: TextAlign.left,
                 ),
-                Padding(
-                  child: Text(
-                    'Cihaz Adı : ${widget.value.DeviceName}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.left,
-                  ),
-                  padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(5.0),
+              ),
+              Padding(
+                child: Text(
+                  'Cihaz Lokasyonu : ${widget.value.DeviceLocation}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                  textAlign: TextAlign.left,
                 ),
-                Padding(
-                  child: Text(
-                    'Cihaz Lokasyonu : ${widget.value.DeviceLocation}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.left,
-                  ),
-                  padding: const EdgeInsets.all(5.0),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Card(
-                    elevation: 5.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.blue,
-                            width: 8,
-                          ),
-                          borderRadius: BorderRadius.circular(6)),
-                      padding: const EdgeInsets.all(10.0),
-                      margin: const EdgeInsets.all(10.0),
-                      child: Padding(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              const Text(
-                                'Cihaz Durumu',
-                                style: TextStyle(
+                padding: const EdgeInsets.all(5.0),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Card(
+                  elevation: 5.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.blueGrey,
+                          width: 8,
+                        ),
+                        borderRadius: BorderRadius.circular(6)),
+                    padding: const EdgeInsets.all(20.0),
+                    child: Padding(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Text(
+                              'Cihaz Durumu',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25),
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(7.0),
+                              child: Text(
+                                ledStateString,
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 25),
                                 textAlign: TextAlign.center,
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(7.0),
-                                child: Text(
-                                  ledStateString,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25),
-                                  textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  10, 10, 10, 15),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green,
+                                  onPrimary: Colors.white,
+                                  shadowColor: Colors.greenAccent,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(32.0)),
+                                  minimumSize:
+                                      const Size(200, 50), //////// HERE
                                 ),
+                                child: const Text('Aç'),
+                                onPressed: () {
+                                  changeLedStateToTrue();
+                                },
                               ),
-                              Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: ElevatedButton(
-                                    child: const Text('Aç'),
-                                    onPressed: () {
-                                      changeLedStateToTrue();
-                                    },
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.all(7.0),
-                                  child: ElevatedButton(
-                                    child: const Text('Kapat'),
-                                    onPressed: () {
-                                      changeLedStateToFalse();
-                                    },
-                                  )),
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  10, 10, 10, 15),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                  onPrimary: Colors.white,
+                                  shadowColor: Colors.redAccent,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(32.0)),
+                                  minimumSize:
+                                      const Size(200, 50), //////// HERE
+                                ),
+                                child: const Text('Kapat'),
+                                onPressed: () {
+                                  changeLedStateToFalse();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        padding: const EdgeInsets.all(50.0),
                       ),
+                      padding: const EdgeInsets.all(50.0),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -451,11 +478,13 @@ class MyDeviceList extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        backgroundColor: Color(0xFF81ECEC),
-        //primarySwatch: Colors.blue,
+        primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        appBar: AppBar(title: const Text('Cihaz Listesi')),
+        appBar: AppBar(
+          title: const Text('Cihaz Listesi'),
+          backgroundColor: Color(0xFF2c3e50),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             var route = MaterialPageRoute(
@@ -465,7 +494,7 @@ class MyDeviceList extends StatelessWidget {
             Navigator.of(context).push(route);
           },
           child: const Icon(Icons.add),
-          backgroundColor: Colors.blue,
+          backgroundColor: const Color(0xFF2c3e50),
         ),
         body: Center(
           //FutureBuilder is a widget that builds itself based on the latest snapshot
