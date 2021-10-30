@@ -16,9 +16,9 @@ class MyHomePageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePageWidget(),
+        home: const HomePageWidget(),
         routes: <String, WidgetBuilder>{
-          'main': (BuildContext context) => HomePageWidget(),
+          'main': (BuildContext context) => const HomePageWidget(),
         });
   }
 }
@@ -80,10 +80,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFF81ECEC),
+        backgroundColor: const Color(0xFF81ECEC),
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -93,9 +93,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Align(
-                      alignment: AlignmentDirectional(0, 0),
+                      alignment: const AlignmentDirectional(0, 0),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            50, 50, 50, 20),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(60),
                           child: Image.asset(
@@ -109,24 +110,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                   child: Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Color(0xFF2c3e50), //Color(0xFF0984E3),
+                    color: const Color(0xFF2c3e50), //Color(0xFF0984E3),
                     elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: Align(
-                      alignment: AlignmentDirectional(0, 0.2),
+                      alignment: const AlignmentDirectional(0, 0.2),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(30, 20, 30, 10),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                30, 20, 30, 10),
                             child: TextFormField(
                               controller: user,
                               obscureText: false,
@@ -155,8 +156,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                30, 0, 30, 10),
                             child: TextFormField(
                               controller: pass,
                               obscureText: !passwordVisibility,
@@ -190,7 +191,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     passwordVisibility
                                         ? Icons.visibility_outlined
                                         : Icons.visibility_off_outlined,
-                                    color: Color(0xFF757575),
+                                    color: const Color(0xFF757575),
                                     size: 22,
                                   ),
                                 ),

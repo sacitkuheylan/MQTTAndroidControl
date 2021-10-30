@@ -60,9 +60,9 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF81ECEC),
+        backgroundColor: const Color(0xFF81ECEC),
         appBar: AppBar(
-          backgroundColor: Color(0xFF81ECEC),
+          backgroundColor: const Color(0xFF81ECEC),
           leading: InkWell(
             onTap: () {
               Navigator.push(
@@ -83,9 +83,9 @@ class _RegisterPageState extends State<RegisterPage> {
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           Align(
-            alignment: AlignmentDirectional(0, 0),
+            alignment: const AlignmentDirectional(0, 0),
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
+              padding: const EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(60),
                 child: Image.asset(
@@ -97,10 +97,10 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
               child: Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
-                  color: Color(0xFF2c3e50), //Color(0xFF0984E3),
+                  color: const Color(0xFF2c3e50), //Color(0xFF0984E3),
                   elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
@@ -143,8 +143,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: TextFormField(
                                 controller: phone,
                                 obscureText: false,
@@ -174,8 +174,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: TextFormField(
                                 controller: email,
                                 keyboardType: TextInputType.emailAddress,
@@ -205,8 +205,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: TextFormField(
                                 controller: user,
                                 obscureText: false,
@@ -235,8 +235,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: TextFormField(
                                 controller: pass,
                                 obscureText: !passwordVisibility,
@@ -270,7 +270,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       passwordVisibility
                                           ? Icons.visibility_outlined
                                           : Icons.visibility_off_outlined,
-                                      color: Color(0xFF757575),
+                                      color: const Color(0xFF757575),
                                       size: 22,
                                     ),
                                   ),
@@ -278,8 +278,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: TextFormField(
                                 controller: imei,
                                 keyboardType: TextInputType.number,
@@ -309,8 +309,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: ElevatedButton(
                                   child: const Text('Kayıt Ol'),
                                   style: ElevatedButton.styleFrom(
@@ -321,7 +321,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(32.0)),
-                                    minimumSize: Size(350, 40), //////// HERE
+                                    minimumSize:
+                                        const Size(350, 40), //////// HERE
                                   ),
                                   onPressed: () {
                                     if (name.text.isEmpty) {

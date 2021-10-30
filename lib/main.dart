@@ -204,12 +204,12 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline6,
             ),
             Padding(
-                padding: EdgeInsets.all(7.0),
+                padding: const EdgeInsets.all(7.0),
                 child: ElevatedButton(
-                    child: Text('Bağlan'),
+                    child: const Text('Bağlan'),
                     onPressed: () {
                       connectToBroker();
-                      Future.delayed(Duration(milliseconds: 3000), () {
+                      Future.delayed(const Duration(milliseconds: 3000), () {
                         setState(() {
                           if (connStatus == true) {
                             connStatusString = "Bağlı";
@@ -218,13 +218,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     })),
             Padding(
-                padding: EdgeInsets.all(7.0),
+                padding: const EdgeInsets.all(7.0),
                 child: ElevatedButton(
                   child: const Text('Aç'),
                   onPressed: changeLedStateToTrue,
                 )),
             Padding(
-                padding: EdgeInsets.all(7.0),
+                padding: const EdgeInsets.all(7.0),
                 child: ElevatedButton(
                   child: const Text('Kapat'),
                   onPressed: changeLedStateToFalse,

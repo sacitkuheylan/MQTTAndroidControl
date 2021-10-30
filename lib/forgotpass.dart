@@ -58,9 +58,9 @@ class _ForgotPageState extends State<ForgotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF81ECEC),
+        backgroundColor: const Color(0xFF81ECEC),
         appBar: AppBar(
-          backgroundColor: Color(0xFF81ECEC),
+          backgroundColor: const Color(0xFF81ECEC),
           leading: InkWell(
             onTap: () {
               Navigator.push(
@@ -81,9 +81,9 @@ class _ForgotPageState extends State<ForgotPage> {
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           Align(
-            alignment: AlignmentDirectional(0, 0),
+            alignment: const AlignmentDirectional(0, 0),
             child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
+              padding: const EdgeInsetsDirectional.fromSTEB(50, 50, 50, 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(60),
                 child: Image.asset(
@@ -95,10 +95,10 @@ class _ForgotPageState extends State<ForgotPage> {
             ),
           ),
           Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+              padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
               child: Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
-                  color: Color(0xFF2c3e50), //Color(0xFF0984E3),
+                  color: const Color(0xFF2c3e50), //Color(0xFF0984E3),
                   elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -142,8 +142,8 @@ class _ForgotPageState extends State<ForgotPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: TextFormField(
                                 controller: email,
                                 keyboardType: TextInputType.emailAddress,
@@ -173,8 +173,8 @@ class _ForgotPageState extends State<ForgotPage> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(30, 0, 30, 10),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 0, 30, 10),
                               child: TextFormField(
                                 controller: imei,
                                 keyboardType: TextInputType.number,

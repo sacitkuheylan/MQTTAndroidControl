@@ -113,22 +113,22 @@ void pong() {
 
 class Spacecraft {
   final int id;
-  var DeviceIMEI;
-  var DeviceName, DeviceLocation;
+  String deviceIMEI;
+  String deviceName, deviceLocation;
 
   Spacecraft({
     required this.id,
-    required this.DeviceIMEI,
-    required this.DeviceName,
-    required this.DeviceLocation,
+    required this.deviceIMEI,
+    required this.deviceName,
+    required this.deviceLocation,
   });
 //TODO: Login sonrası gelecek id değişkeni ile istek oluşturarak sadece doğru cihaz listesini getir. PHP Backend kısmı yapıldı id ile istek göndermek gerekiyor.
   factory Spacecraft.fromJson(Map<String, dynamic> jsonData) {
     return Spacecraft(
       id: jsonData['DeviceId'],
-      DeviceIMEI: jsonData['DeviceIMEI'],
-      DeviceName: jsonData['DeviceName'],
-      DeviceLocation: jsonData['DeviceLocation'],
+      deviceIMEI: jsonData['DeviceIMEI'],
+      deviceName: jsonData['DeviceName'],
+      deviceLocation: jsonData['DeviceLocation'],
     );
   }
 }
@@ -185,7 +185,7 @@ class CustomListView extends StatelessWidget {
               children: <Widget>[
                 Padding(
                     child: Text(
-                      spacecraft.DeviceName,
+                      spacecraft.deviceName,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -196,7 +196,7 @@ class CustomListView extends StatelessWidget {
                     padding: const EdgeInsets.all(1.0)),
                 Padding(
                     child: Text(
-                      "IMEI: " + spacecraft.DeviceIMEI.toString(),
+                      "IMEI: " + spacecraft.deviceIMEI.toString(),
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 15),
                       textAlign: TextAlign.center,
@@ -204,7 +204,7 @@ class CustomListView extends StatelessWidget {
                     padding: const EdgeInsets.all(1.0)),
                 Padding(
                     child: Text(
-                      "Yer: " + spacecraft.DeviceLocation,
+                      "Yer: " + spacecraft.deviceLocation,
                       style: const TextStyle(
                           fontStyle: FontStyle.italic, fontSize: 15),
                       overflow: TextOverflow.ellipsis,
@@ -230,7 +230,7 @@ class CustomListView extends StatelessWidget {
 }
 
 //Future is n object representing a delayed computation.
-Future<List<Spacecraft>> downloadJSON(String UserId) async {
+Future<List<Spacecraft>> downloadJSON(String userId) async {
   /*
   final response = await http
       .post(Uri.parse("http://10.0.2.2:80/mqttAndroid/devices.php"), body: {
@@ -246,7 +246,7 @@ Future<List<Spacecraft>> downloadJSON(String UserId) async {
 
   final response = await http
       .post(Uri.parse("http://10.0.2.2:80/mqttAndroid/devices.php"), body: {
-    'UserId': UserId,
+    'UserId': userId,
   });
 
   if (response.statusCode == 200) {
@@ -290,7 +290,7 @@ class _SecondScreenState extends State<SecondScreen> {
       if (onPressedFlag != true) {
         builder.clear();
         builder.addString('on');
-        client.publishMessage(widget.value.DeviceIMEI.toString(),
+        client.publishMessage(widget.value.deviceIMEI.toString(),
             MqttQos.exactlyOnce, builder.payload!);
         onPressedFlag = true;
         offPressedFlag = false;
@@ -307,7 +307,7 @@ class _SecondScreenState extends State<SecondScreen> {
       if (offPressedFlag != true) {
         builder.clear();
         builder.addString('off');
-        client.publishMessage(widget.value.DeviceIMEI.toString(),
+        client.publishMessage(widget.value.deviceIMEI.toString(),
             MqttQos.exactlyOnce, builder.payload!);
         offPressedFlag = true;
         onPressedFlag = false;
@@ -355,7 +355,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 //`widget` is the current configuration. A State object's configuration
                 //is the corresponding StatefulWidget instance.
                 child: Text(
-                  'Cihaz IMEI : ${widget.value.DeviceIMEI}',
+                  'Cihaz IMEI : ${widget.value.deviceIMEI}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20),
                   textAlign: TextAlign.left,
@@ -364,7 +364,7 @@ class _SecondScreenState extends State<SecondScreen> {
               ),
               Padding(
                 child: Text(
-                  'Cihaz Adı : ${widget.value.DeviceName}',
+                  'Cihaz Adı : ${widget.value.deviceName}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20),
                   textAlign: TextAlign.left,
@@ -373,7 +373,7 @@ class _SecondScreenState extends State<SecondScreen> {
               ),
               Padding(
                 child: Text(
-                  'Cihaz Lokasyonu : ${widget.value.DeviceLocation}',
+                  'Cihaz Lokasyonu : ${widget.value.deviceLocation}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20),
                   textAlign: TextAlign.left,
@@ -404,7 +404,7 @@ class _SecondScreenState extends State<SecondScreen> {
                               textAlign: TextAlign.center,
                             ),
                             Padding(
-                              padding: EdgeInsets.all(7.0),
+                              padding: const EdgeInsets.all(7.0),
                               child: Text(
                                 ledStateString,
                                 style: const TextStyle(
@@ -483,7 +483,7 @@ class MyDeviceList extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Cihaz Listesi'),
-          backgroundColor: Color(0xFF2c3e50),
+          backgroundColor: const Color(0xFF2c3e50),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
