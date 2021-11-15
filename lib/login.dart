@@ -48,8 +48,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   TextEditingController pass = TextEditingController();
 
   Future login() async {
+    /*
     final response = await http
         .post(Uri.parse("http://10.0.2.2:80/mqttAndroid/login.php"), body: {
+      'username': user.text,
+      'password': pass.text,
+    });
+    */
+    final response = await http
+        .post(Uri.parse("http://localhost:80/mqttAndroid/login.php"), body: {
       'username': user.text,
       'password': pass.text,
     });
@@ -230,7 +237,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         children: [
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
-                                10, 10, 10, 15),
+                                5, 5, 5, 10),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.green,
@@ -249,7 +256,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ),
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
-                                10, 0, 10, 15),
+                                5, 0, 5, 10),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.green,

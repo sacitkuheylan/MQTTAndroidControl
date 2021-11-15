@@ -113,8 +113,8 @@ void pong() {
 
 class Spacecraft {
   final int id;
-  String deviceIMEI;
-  String deviceName, deviceLocation;
+  var deviceIMEI;
+  var deviceName, deviceLocation;
 
   Spacecraft({
     required this.id,
@@ -243,9 +243,14 @@ Future<List<Spacecraft>> downloadJSON(String userId) async {
   //const jsonEndpoint = "http://10.0.2.2:80/mqttAndroid/devices.php";
 
   //final response = await get(Uri.parse(jsonEndpoint));
-
+  /*
   final response = await http
       .post(Uri.parse("http://10.0.2.2:80/mqttAndroid/devices.php"), body: {
+    'UserId': userId,
+  });
+   */
+  final response = await http
+      .post(Uri.parse("http://localhost/mqttAndroid/devices.php"), body: {
     'UserId': userId,
   });
 
